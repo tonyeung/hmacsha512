@@ -1,0 +1,50 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="//code.jquery.com/jquery-2.0.2.js"></script>
+    <script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js"></script>
+    <script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha512.js"></script>
+</head>
+<body>
+    <div id="formData">
+        <label>Data: <input id="data" value="abc:123:Fri, 28 Jun 2013 15:03:00 GMT" /></label><br />
+        <label>Secret: <input id="secret" value="c22b31a2-780b-4ac5-8bd5-1296b05130f4" /></label><br />
+        <button id="submit">Submit</button>
+    </div>
+    
+    <h1>CryptoJS Result</h1>
+    <div id="jsResult">
+
+    </div>
+    
+    <h1>C# Result</h1>
+    <div id="csResult">
+
+    </div>
+
+    <script>
+
+        var rawSig = "abc:123:Fri, 28 Jun 2013 15:03:00 GMT";
+        var token = "c22b31a2-780b-4ac5-8bd5-1296b05130f4"
+        var hash = CryptoJS.HmacSHA512(rawSig, token);
+        var sig = hash.toString(CryptoJS.enc.Base64);
+
+        $(document).ready(function () {
+            $('#submit').click(function () {
+                $.post('/home/hmac', { sig: rawSig, token: token }, function (data) {
+                    $('#csResult').html(data);
+                    $('#jsResult').html(sig);
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>
